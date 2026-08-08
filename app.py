@@ -47,3 +47,82 @@ class TaskDatabase:
                 )
                 """
             )
+
+    def insert(self, task: Task) -> int:
+        with self._connect() as conn:
+            cur = conn.execute(
+                """
+                INSERT INTO tasks (title, description, due_date, priority,
+                                    category, completed, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                """,
+                (task.title, task.description, task.due_date, task.priority,
+                 task.category, int(task.completed), task.created_at),
+            )
+            return cur.lastrowid
+ 
+    def get_all(self, order_by_priority: bool = False) -> List[Task]:
+        query = "SELECT * FROM tasks"
+        if order_by_priority:
+            # Custom ordering: High -> Medium -> Low
+            query += """
+                ORDER BY CASE priority
+                    WHEN 'High' THEN 1
+                    WHEN 'Medium' THEN 2
+                    WHEN 'Low' THEN 3
+                    ELSE 4 END, id
+            """
+        else:
+            query += " ORDER BY id"
+        with self._connect() as conn:
+            rows = conn.execute(query).fetchall()
+        return [self._row_to_task(r) for r in rows]
+ 
+    def get_by_category(self, category: str) -> List[Task]:
+        with self._connect() as conn:
+            rows = conn.execute(
+                "SELECT * FROM tasks WHERE LOWER(category) = LOWER(?) ORDER BY id",
+                (category,),
+            ).fetchall()
+        return [self._row_to_task(r) for r in rows]
+ 
+    def get_by_id(self, task_id: int) -> Optional[Task]:
+        with self._connect() as conn:
+            row = conn.execute("SELECT * FROM tasks WHERE id = ?", (task_id,)).fetchone()
+        return self._row_to_task(row) if row else None
+ 
+    def update(self, task: Task) -> bool:
+        with self._connect() as conn:
+            cur = conn.execute(
+                """
+                UPDATE tasks
+                SET title = ?, description = ?, due_date = ?, priority = ?, category = ?
+                WHERE id = ?
+                """,
+                (task.title, task.description, task.due_date, task.priority,
+                 task.category, task.id),
+            )
+            return cur.rowcount > 0
+ 
+    def mark_complete(self, task_id: int) -> bool:
+        with self._connect() as conn:
+            cur = conn.execute("UPDATE tasks SET completed = 1 WHERE id = ?", (task_id,))
+            return cur.rowcount > 0
+ 
+    def delete(self, task_id: int) -> bool:
+        with self._connect() as conn:
+            cur = conn.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
+            return cur.rowcount > 0
+ 
+    @staticmethod
+    def _row_to_task(row: sqlite3.Row) -> Task:
+        return Task(
+            id=row["id"],
+            title=row["title"],
+            description=row["description"] or "",
+            due_date=row["due_date"] or "",
+            priority=row["priority"] or "Medium",
+            category=row["category"] or "General",
+            completed=bool(row["completed"]),
+            created_at=row["created_at"] or "",
+        )
