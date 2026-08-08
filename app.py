@@ -130,17 +130,45 @@ class TaskDatabase:
 class TaskManagerApp:
  
     MENU = """
-==================== TASK MANAGER ====================
- 1) Add task
- 2) View tasks
- 3) Edit task
- 4) complete task
- 5) Delete task
- 6) View tasks 
- 7) Sort tasks 
- 8) Export tasks to CSV
- 9) Exit
-========================================================"""
+    ==================== TASK MANAGER ====================
+    1) Add task
+    2) View tasks
+    3) Edit task
+    4) Complete task
+    5) Delete task
+    6) View tasks
+    7) Sort tasks
+    8) Export tasks to CSV
+    9) Exit
+    ========================================================"""
  
     def __init__(self):
         self.db = TaskDatabase()
+
+    def run(self):
+        print("Welcome to Task Manager!")
+        while True:
+            print(self.MENU)
+            choice = input("Choose an option (1-9): ").strip()
+ 
+            if choice == "1":
+                self.add_task()
+            elif choice == "2":
+                self.view_tasks()
+            elif choice == "3":
+                self.edit_task()
+            elif choice == "4":
+                self.complete_task()
+            elif choice == "5":
+                self.delete_task()
+            elif choice == "6":
+                self.view_by_category()
+            elif choice == "7":
+                self.view_tasks(order_by_priority=True)
+            elif choice == "8":
+                self.export_csv()
+            elif choice == "9":
+                print("Goodbye!")
+                break
+            else:
+                print("Invalid choice, please pick a number from 1 to 9.")
