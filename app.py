@@ -246,4 +246,27 @@ class TaskManagerApp:
             print(f"Task {task_id} marked as complete.")
         else:
             print(f"No task found with ID {task_id}.")
+
+    def complete_task(self):
+        self.view_tasks()
+        task_id = self._prompt_int("Enter the ID of the task to mark complete: ")
+        if task_id is None:
+            return
+        if self.db.mark_complete(task_id):
+            print(f"Task {task_id} marked as complete.")
+        else:
+            print(f"No task found with ID {task_id}.")
  
+    def delete_task(self):
+        self.view_tasks()
+        task_id = self._prompt_int("Enter the ID of the task to delete: ")
+        if task_id is None:
+            return
+        confirm = input(f"Are you sure you want to delete task {task_id}? (y/n): ").strip().lower()
+        if confirm != "y":
+            print("Delete cancelled.")
+            return
+        if self.db.delete(task_id):
+            print(f"Task {task_id} deleted.")
+        else:
+            print(f"No task found with ID {task_id}.")
