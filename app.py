@@ -172,7 +172,7 @@ class TaskManagerApp:
                 break
             else:
                 print("Invalid choice, please pick a number from 1 to 9.")
-                
+
     def add_task(self):
         print("\n--- Add New Task ---")
         title = input("Title: ").strip()
@@ -188,3 +188,7 @@ class TaskManagerApp:
                     priority=priority, category=category)
         new_id = self.db.insert(task)
         print(f"Task added successfully with ID {new_id}.")
+
+    def view_tasks(self, order_by_priority: bool = False):
+        tasks = self.db.get_all(order_by_priority=order_by_priority)
+        self._print_table(tasks)
