@@ -192,3 +192,12 @@ class TaskManagerApp:
     def view_tasks(self, order_by_priority: bool = False):
         tasks = self.db.get_all(order_by_priority=order_by_priority)
         self._print_table(tasks)
+
+    def view_by_category(self):
+        category = input("Enter category to filter by: ").strip()
+        tasks = self.db.get_by_category(category)
+        if not tasks:
+            print(f"No tasks found in category '{category}'.")
+            return
+        self._print_table(tasks)
+
