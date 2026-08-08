@@ -210,4 +210,29 @@ class TaskManagerApp:
         if task is None:
             print(f"No task found with ID {task_id}.")
             return
-        
+
+        print("\n--- Edit Task ---")
+        print("Press Enter to keep the current value shown in brackets.\n")
+ 
+        new_title = input(f"Title [{task.title}]: ").strip()
+        if new_title:
+            task.title = new_title
+ 
+        new_description = input(f"Description [{task.description or '-'}]: ").strip()
+        if new_description:
+            task.description = new_description
+ 
+        new_due_date = self._prompt_due_date(current=task.due_date)
+        task.due_date = new_due_date
+ 
+        new_priority = self._prompt_priority(current=task.priority)
+        task.priority = new_priority
+ 
+        new_category = input(f"Category [{task.category}]: ").strip()
+        if new_category:
+            task.category = new_category
+ 
+        if self.db.update(task):
+            print(f"Task {task_id} updated successfully.")
+        else:
+            print(f"Failed to update task {task_id}.")
