@@ -172,3 +172,19 @@ class TaskManagerApp:
                 break
             else:
                 print("Invalid choice, please pick a number from 1 to 9.")
+                
+    def add_task(self):
+        print("\n--- Add New Task ---")
+        title = input("Title: ").strip()
+        if not title:
+            print("Title cannot be empty. Task not added.")
+            return
+        description = input("Description (optional): ").strip()
+        due_date = self._prompt_due_date()
+        priority = self._prompt_priority()
+        category = input("Category (default 'General'): ").strip() or "General"
+ 
+        task = Task(title=title, description=description, due_date=due_date,
+                    priority=priority, category=category)
+        new_id = self.db.insert(task)
+        print(f"Task added successfully with ID {new_id}.")
