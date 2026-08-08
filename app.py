@@ -126,3 +126,21 @@ class TaskDatabase:
             completed=bool(row["completed"]),
             created_at=row["created_at"] or "",
         )
+
+class TaskManagerApp:
+ 
+    MENU = """
+==================== TASK MANAGER ====================
+ 1) Add task
+ 2) View tasks
+ 3) Edit task
+ 4) complete task
+ 5) Delete task
+ 6) View tasks 
+ 7) Sort tasks 
+ 8) Export tasks to CSV
+ 9) Exit
+========================================================"""
+ 
+    def __init__(self):
+        self.db = TaskDatabase()
