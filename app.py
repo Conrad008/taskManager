@@ -270,3 +270,20 @@ class TaskManagerApp:
             print(f"Task {task_id} deleted.")
         else:
             print(f"No task found with ID {task_id}.")
+
+     
+    def export_csv(self):
+        tasks = self.db.get_all()
+        if not tasks:
+            print("No tasks to export.")
+            return
+        filename = input("Export filename (default 'tasks_export.csv'): ").strip() or "tasks_export.csv"
+        with open(filename, "w", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerow(["ID", "Title", "Description", "Due Date",
+                              "Priority", "Category", "Completed", "Created At"])
+            for t in tasks:
+                writer.writerow([t.id, t.title, t.description, t.due_date,
+                                  t.priority, t.category,
+                                  "Yes" if t.completed else "No", t.created_at])
+        print(f"Exported {len(tasks)} task(s) to '{filename}'.")
