@@ -201,3 +201,13 @@ class TaskManagerApp:
             return
         self._print_table(tasks)
 
+    def edit_task(self):
+        self.view_tasks()
+        task_id = self._prompt_int("Enter the ID of the task to edit: ")
+        if task_id is None:
+            return
+        task = self.db.get_by_id(task_id)
+        if task is None:
+            print(f"No task found with ID {task_id}.")
+            return
+        
