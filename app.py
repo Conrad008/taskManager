@@ -236,3 +236,14 @@ class TaskManagerApp:
             print(f"Task {task_id} updated successfully.")
         else:
             print(f"Failed to update task {task_id}.")
+
+    def complete_task(self):
+        self.view_tasks()
+        task_id = self._prompt_int("Enter the ID of the task to mark complete: ")
+        if task_id is None:
+            return
+        if self.db.mark_complete(task_id):
+            print(f"Task {task_id} marked as complete.")
+        else:
+            print(f"No task found with ID {task_id}.")
+ 
