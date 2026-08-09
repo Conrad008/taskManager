@@ -315,3 +315,12 @@ class TaskManagerApp:
         if not raw:
             return current if current in PRIORITIES else "Medium"
         return raw if raw in PRIORITIES else (current if current in PRIORITIES else "Medium")
+
+    
+    @staticmethod
+    def _prompt_int(prompt: str) -> Optional[int]:
+        raw = input(prompt).strip()
+        if not raw.isdigit():
+            print("Please enter a valid numeric ID.")
+            return None
+        return int(raw)
