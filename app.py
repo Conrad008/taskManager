@@ -324,3 +324,25 @@ class TaskManagerApp:
             print("Please enter a valid numeric ID.")
             return None
         return int(raw)
+
+    @staticmethod
+    def _print_table(tasks: List[Task]):
+        if not tasks:
+            print("No tasks found.")
+            return
+ 
+        headers = ["ID", "Title", "Priority", "Category", "Due Date", "Status"]
+        col_widths = [4, 25, 8, 12, 12, 10]
+ 
+        def fmt_row(values):
+            return " | ".join(str(v)[:w].ljust(w) for v, w in zip(values, col_widths))
+ 
+        print("\n" + fmt_row(headers))
+        print("-" * (sum(col_widths) + 3 * (len(col_widths) - 1)))
+        for t in tasks:
+            status = "Done" if t.completed else "Pending"
+            print(fmt_row([t.id, t.title, t.priority, t.category,
+                            t.due_date or "-", status]))
+            if t.description:
+                print(f"      -> {t.description}")
+        print()
