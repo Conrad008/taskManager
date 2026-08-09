@@ -306,3 +306,12 @@ class TaskManagerApp:
         except ValueError:
             print("Invalid date format, expected DD-MM-YYYY. Keeping previous value.")
             return current or ""
+        
+    @staticmethod
+    def _prompt_priority(current: Optional[str] = None) -> str:
+        label = f"Priority {PRIORITIES} [{current}]: " if current is not None \
+            else f"Priority {PRIORITIES} (default 'Medium'): "
+        raw = input(label).strip().title()
+        if not raw:
+            return current if current in PRIORITIES else "Medium"
+        return raw if raw in PRIORITIES else (current if current in PRIORITIES else "Medium")
