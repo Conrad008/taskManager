@@ -287,3 +287,22 @@ class TaskManagerApp:
                                   t.priority, t.category,
                                   "Yes" if t.completed else "No", t.created_at])
         print(f"Exported {len(tasks)} task(s) to '{filename}'.")
+
+    @staticmethod
+    def _prompt_due_date(current: Optional[str] = None) -> str:
+        """Prompt for a due date in DD-MM-YYYY format.
+ 
+        If `current` is given (edit mode), an empty response keeps it;
+        otherwise an empty response means "no due date".
+        """
+        label = f"Due date (DD-MM-YYYY) [{current or '-'}]: " if current is not None \
+            else "Due date (DD-MM-YYYY, optional): "
+        raw = input(label).strip()
+        if not raw:
+            return current or ""
+        try:
+            datetime.strptime(raw, "%d-%m-%Y")
+            return raw
+        except ValueError:
+            print("Invalid date format, expected DD-MM-YYYY. Keeping previous value.")
+            return current or ""
