@@ -346,3 +346,8 @@ class TaskManagerApp:
             if t.description:
                 print(f"      -> {t.description}")
         print()
+
+
+if __name__ == "__main__":
+    app = TaskManagerApp()
+    app.run()
